@@ -43,7 +43,7 @@ public class ExcelInfoHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
 		if (qName.equalsIgnoreCase("COLUMNS")) {
-			columnInfoList = new ArrayList<ColumnInfo>();
+			this.columnInfoList = new ArrayList<ColumnInfo>();
 		}
 		if (qName.equalsIgnoreCase("COLUMN")) {
 			columnInfo = new ColumnInfo();
@@ -96,7 +96,7 @@ public class ExcelInfoHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		if (qName.equalsIgnoreCase("COLUMN")) {
-			columnInfoList.add(columnInfo);
+			this.columnInfoList.add(this.columnInfo);
 		}
 	}
 
