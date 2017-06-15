@@ -1,13 +1,11 @@
 <%@ page language="java" errorPage="/sample/common/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
-<%@ include file="/sample/common/taglibs.jsp"%>
-<head>
-    <%@ include file="/sample/common/meta.jsp" %>
-    <title><spring:message code="movieList.title"/></title>
-	<meta name="heading" content="<spring:message code='movieList.heading'/>"/>       
-	<link rel="stylesheet" href="<c:url value='/sample/css/admin.css'/>" type="text/css">
-    <script type="text/javascript" src="<c:url value='/sample/javascript/CommonScript.js'/>"></script>    
-	<script type="text/javascript">
-		function fncSearchMovie(arg) {
+<%@ include file="/sample/common/top.jsp"%>
+		<div class="location"><a href="<c:url value='/anyframe.jsp'/>">Home</a> &gt; <a href="<c:url value='/excelMovieFinder.do?method=list'/>">Excel 1.0.2</a></div>
+    </div>
+    <hr />
+<script type="text/javascript" src="<c:url value='/sample/javascript/CommonScript.js'/>"></script>    
+<script type="text/javascript">
+		function fncSearchMovie() {
 		   	document.searchForm.action="<c:url value='/excelMovieFinder.do?method=list'/>";
 		   	document.searchForm.submit();						
 		}	
@@ -17,88 +15,97 @@
 			document.excelDownloadForm.submit();	
 		}	
 		function fncExcelUpload() {
-			document.excelUploadForm.queryId.value="excel.excelMovieInsert";
-
+			document.excelUploadForm.queryId.value = "excel.excelMovieInsert";
+			
 			var filePath = document.excelUploadForm.excelFile.value;
-
 			if(filePath.indexOf('.xls') == -1){
-				alert("Excel 파일이 아닙니다.");
+				alert("It is not excel file!");
 				return;
 			}
-
+			
 			document.excelUploadForm.action="<c:url value='/excelDownload.do?method=excelUpload'/>";
 			document.excelUploadForm.submit();	
 		}	
 	</script>
-</head>
-<!--************************** begin of contents *****************************-->
-<!--begin of title-->
-<table width="100%" height="24" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td height="24">
-		<table width="100%" height="24" border="0" cellpadding="0" cellspacing="0">
-			<tr>
-				<td height="24" class="ct_ttl01" style="padding-left: 12px">Search List of Movie</td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-</table>
-<!--end of title-->
-
-<form:form modelAttribute="movie" method="post" name="searchForm">	
-	<table class="scrollTable" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
-		<thead>
-			<tr>
-				<th scope="col" style="border-right: 1px #CCCCCC solid"><spring:message code="movie.genre" /></th>
-				<th scope="col" style="border-right: 1px #CCCCCC solid"><spring:message code="movie.title" /></th>
-				<th scope="col" style="border-right: 1px #CCCCCC solid"><spring:message code="movie.director" /></th>
-				<th scope="col" style="border-right: 1px #CCCCCC solid"><spring:message code="movie.actors" /></th>
-				<th scope="col" style="border-right: 1px #CCCCCC solid"><spring:message code="movie.ticketPrice" /></th>
-				<th scope="col" style="border-right: 1px #CCCCCC solid"><spring:message code="movie.releaseDate" /></th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach var="movie" items="${movies}">
-				<tr class="board" onMouseOver="this.style.backgroundColor='#e4eaff';return true;" onMouseOut="this.style.backgroundColor=''; return true;" >
-					<td class="underline">${movie.genreName}</td>
-					<td class="underline">${movie.title}</td>
-					<td align="left">${movie.director}</td>
-					<td align="left">${movie.actors}</td>
-					<td align="center">${movie.ticketPrice}</td>
-					<td align="center">${movie.releaseDate}</td>
-				</tr>
-			</c:forEach>
-		</tbody>
-	</table>
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
-		<tr>
-			<td class="page" height="50" align="center">
-				<anyframe:pagenavigator linkUrl="javascript:fncSearchMovie();"
-					pages="${resultPage}"/>
-			</td>
-		</tr>
-	</table>
-</form:form>	
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px; vertical-align: center;">
-		<tr>
-			<form:form method="post" name="excelUploadForm" enctype="multipart/form-data">
-			<td align="right"><input type="file" name="excelFile" width="0"></td>
-				<input name="queryId" type="hidden" value="" />
-				<input name="columnInfoFile" type="hidden" value="movie" />
-				<input name="resultPage" type="hidden" value="redirect:/excelMovieFinder.do?method=list" />
-			</form:form>
-			<td align="right" width="70"><a href='<c:url value="javascript:fncExcelUpload();" />'><img
-				src="<c:url value='/sample/images/btn_excelup.png'/>" width="65" height="18" border="0" /></a></td>
-			<td align="right" width="80"><a href='<c:url value="javascript:fncExcelDownload();" />'><img
-				src="<c:url value='/sample/images/btn_exceldown.png'/>" width="79" height="18" border="0" /></a></td>
-		</tr>
-	</table>
-	
-<form:form method="post" name="excelDownloadForm">
-	<input name="queryId" type="hidden" value="" />
-	<input name="title" type="hidden" value="" />
-	<input name="nowPlaying" type="hidden" value="Y" />
-	<input name="fileName" type="hidden" value="movie" />
-	<input name="columnInfoFile" type="hidden" value="movie" />
-</form:form>
+	<div id="container">
+        <div class="cont_top">
+        	<h2><spring:message code='movie.heading'/></h2>
+        </div>
+		<form:form modelAttribute="movie" method="post" name="searchForm">	
+			<div class="list">
+		      		<table summary="This is list of movie">
+		            	<caption>Movie List</caption>
+		                <colgroup>
+		                	<col style="width:12%;" />
+		                    <col style="width:20%;" />
+		                    <col style="width:20%;" />
+		                    <col style="width:20%;" />
+		                    <col style="width:14%;" />
+		                    <col style="width:14%;" />
+		                </colgroup>
+		                <thead>
+		                    <tr>
+		                    	<th><spring:message code="movie.genre" /></th>
+		                        <th><spring:message code="movie.title" /></th>
+		                        <th><spring:message code="movie.director" /></th>
+		                        <th><spring:message code="movie.actors" /></th>
+		                        <th><spring:message code="movie.ticketPrice" /></th>
+		                        <th><spring:message code="movie.releaseDate" /></th>
+		                    </tr>
+		                </thead>
+						 <tbody>
+			                <c:forEach var="movie" items="${movies}">
+				                <tr>
+									<td>${movie.genreName}</td>
+									<td>${movie.title}</td>
+									<td align="left">${movie.director}</td>
+									<td align="left">${movie.actors}</td>
+									<td align="center">${movie.ticketPrice}</td>
+									<td align="center">${movie.releaseDate}</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+		        </table>
+		    </div>
+		    <div class="listunder_container">           
+		         <div class="list_paging">
+		             <anyframe:pagenavigator linkUrl="javascript:fncSearchMovie();" pages="${resultPage}"/>
+		         </div>
+		     </div>
+		</form:form>	
+		
+         <div class="listunder_container">
+            <div class="list_underbtn_right">
+	         	<form:form id="excelUploadForm" method="post" name="excelUploadForm" enctype="multipart/form-data">
+					<input id="excelFile" type="file" name="excelFile"/>
+					<input id="queryId" name="queryId" type="hidden" value="" />
+					<input name="columnInfoFile" type="hidden" value="movie" />
+					<input name="resultPage" type="hidden" value="redirect:/excelMovieFinder.do?method=list" />
+				</form:form>
+				<div class="margin_top10">
+                <a href="javascript:fncExcelUpload();">
+                <span class="button default icon">   
+                    <span class="fileupload">&nbsp;</span>
+                    <span class="none_a txt_num10">Excel Up</span>
+                </span>
+                </a>  
+                <a href="javascript:fncExcelDownload();">
+                <span class="button default icon">   
+                    <span class="filedownload">&nbsp;</span>
+                    <span class="none_a txt_num12">Excel Down</span>
+                </span>
+                </a>          
+                </div>                     
+            </div>        
+         </div>
+         
+		<form:form id="excelDownloadForm" method="post" name="excelDownloadForm">
+			<input name="queryId" type="hidden" value="" />
+			<input name="title" type="hidden" value="" />
+			<input name="nowPlaying" type="hidden" value="Y" />
+			<input name="fileName" type="hidden" value="movie" />
+			<input name="columnInfoFile" type="hidden" value="movie" />
+		</form:form>
+		</div>
+    <hr />
+<%@ include file="/sample/common/bottom.jsp"%>
