@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<plugin name="excel" description="Excel Plugin consists of sample code that provides guidelines on how to use Apache POI that provides Excel Download and Upload etc.">
+<plugin name="excel">
   <groupId>org.anyframe.plugin</groupId>
   <artifactId>anyframe-excel-pi</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.0.RC1</version>
   <dependent-plugins>
     <dependent-plugin name="fileupload" version="2.0.0&gt;*"/>
     <dependent-plugin name="query" version="2.0.0&gt;*"/>
