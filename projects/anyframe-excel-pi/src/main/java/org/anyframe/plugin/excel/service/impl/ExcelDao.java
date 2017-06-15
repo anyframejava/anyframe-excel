@@ -18,6 +18,7 @@ package org.anyframe.plugin.excel.service.impl;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,43 +32,45 @@ import org.springframework.stereotype.Repository;
  * 
  * @author Jonghoon Kim
  */
-@SuppressWarnings("rawtypes")
 @Repository("excelDao")
 public class ExcelDao {
-
+	//Velocity-Support-contextProperties-START
 	@Value("#{contextProperties['pageSize'] ?: 10}")
 	int pageSize;
 
 	@Value("#{contextProperties['pageUnit'] ?: 10}")
 	int pageUnit;
+	//Velocity-Support-contextProperties-END
 
 	@Inject
 	@Named("queryService")
 	private QueryService queryService;
 
-	public List getList(String queryId, Map searchMap) throws Exception {
-		return (List) queryService.find(queryId, convertParams(searchMap));
+	public List<Map<String, Object>> getList(String queryId,
+			Map<String, Object> searchMap) {
+		return queryService.find(queryId, convertParams(searchMap));
 	}
 
-	public List getPagingList(String queryId, int pageIndex, Map searchMap)
-			throws Exception {
-		return (List) queryService.find(queryId, convertParams(searchMap),
-				pageIndex);
+	public List<Map<String, Object>> getPagingList(String queryId,
+			int pageIndex, Map<String, Object> searchMap) {
+		return queryService.find(queryId, convertParams(searchMap), pageIndex);
 	}
 
-	public int create(String queryId, Map insertMap) throws Exception {
+	public int create(String queryId, Map<String, Object> insertMap) {
 		return queryService.create(queryId, convertParams(insertMap));
 	}
 
-	private Object[] convertParams(Map targetMap) {
+	private Object[] convertParams(Map<String, Object> targetMap) {
 		Object[] params = new Object[targetMap.size()];
-		Iterator targetMapIterator = targetMap.entrySet().iterator();
+		Iterator<Entry<String, Object>> targetMapIterator = targetMap
+				.entrySet().iterator();
 		int i = 0;
 		while (targetMapIterator.hasNext()) {
-			Map.Entry entry = (Map.Entry) targetMapIterator.next();
+			Map.Entry<String, Object> entry = targetMapIterator.next();
 			params[i] = new Object[] { entry.getKey(), entry.getValue() };
 			i++;
 		}
 		return params;
 	}
+	
 }

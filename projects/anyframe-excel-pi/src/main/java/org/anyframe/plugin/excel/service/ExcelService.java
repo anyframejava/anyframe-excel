@@ -26,11 +26,12 @@ import org.apache.commons.collections.map.ListOrderedMap;
  * 
  * @author Jonghoon Kim
  */
-@SuppressWarnings("rawtypes")
 public interface ExcelService {
 
-	public List<Map> download(Map map) throws Exception;
-
-	public int upload(Map infoMap, List<ListOrderedMap> insertList)
+	public List<Map<String, Object>> download(Map<String, Object> map)
 			throws Exception;
+
+	public int upload(Map<String, Object> infoMap,
+			List<ListOrderedMap> insertList) throws Exception;
+	
 }

@@ -32,7 +32,6 @@ import org.springframework.stereotype.Service;
  * 
  * @author Jonghoon Kim
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
 @Service("excelService")
 public class ExcelServiceImpl implements ExcelService {
 
@@ -40,21 +39,23 @@ public class ExcelServiceImpl implements ExcelService {
 	@Named("excelDao")
 	private ExcelDao excelDao;
 
-	public List<Map> download(Map map) throws Exception {
+	public List<Map<String, Object>> download(Map<String, Object> map)
+			throws Exception {
 		String queryId = (String) map.get("queryId");
 
-		List resultList = new ArrayList();
+		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 		if (map.get("pageIndex") != null) {
-			resultList = excelDao.getPagingList(queryId,
-					(Integer) map.get("pageIndex"), map);
+			resultList = excelDao.getPagingList(queryId, (Integer) map
+					.get("pageIndex"), map);
 		} else {
 			resultList = excelDao.getList(queryId, map);
 		}
 		return resultList;
 	}
 
-	public int upload(Map infoMap, List<ListOrderedMap> insertList)
-			throws Exception {
+	@SuppressWarnings("unchecked")
+	public int upload(Map<String, Object> infoMap,
+			List<ListOrderedMap> insertList) throws Exception {
 		String queryId = (String) infoMap.get("queryId");
 
 		int returnValue = 0;

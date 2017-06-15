@@ -54,7 +54,6 @@ import org.springframework.web.multipart.MultipartFile;
  * 
  * @author Jonghoon Kim
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
 @Controller("excelController")
 @RequestMapping("/excelDownload.do")
 public class ExcelController {
@@ -67,7 +66,7 @@ public class ExcelController {
 	public void excelDownload(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		Map searchMap = bindRequestToMap(request);
+		Map<String, Object> searchMap = bindRequestToMap(request);
 
 		String columnInfoFile = "";
 
@@ -77,7 +76,7 @@ public class ExcelController {
 			columnInfoFile = searchMap.get("columnInfoFile").toString();
 		}
 
-		List<Map> resultList = excelService.download(searchMap);
+		List<Map<String, Object>> resultList = excelService.download(searchMap);
 
 		String fileName = "";
 		if (searchMap.get("fileName") == null) {
@@ -139,7 +138,7 @@ public class ExcelController {
 
 			for (int i = 0; i < resultList.size(); i++) {
 				row = sheet.createRow(i + 1);
-				Map resultMap = resultList.get(i);
+				Map<String, Object> resultMap = resultList.get(i);
 
 				for (int j = 0; j < columnCount; j++) {
 					cell = row.createCell(j);
@@ -172,9 +171,11 @@ public class ExcelController {
 		}
 	}
 
-	private Map bindRequestToMap(HttpServletRequest request) throws Exception {
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> bindRequestToMap(HttpServletRequest request)
+			throws Exception {
 		Enumeration en = request.getParameterNames();
-		Map parameterMap = new HashMap();
+		Map<String, Object> parameterMap = new HashMap<String, Object>();
 		while (en.hasMoreElements()) {
 			String paramName = en.nextElement().toString();
 			parameterMap.put(paramName, request.getParameter(paramName));
@@ -190,8 +191,7 @@ public class ExcelController {
 
 			ExcelInfoHandler handler = new ExcelInfoHandler();
 			File file = new File(
-					request.getSession()
-							.getServletContext()
+					request.getSession().getServletContext()
 							.getRealPath(
 									"/WEB-INF/classes/excel/" + columnInfoFile
 											+ ".xml"));
@@ -213,7 +213,7 @@ public class ExcelController {
 			@RequestParam(value = "excelFile", required = false) MultipartFile excelFile)
 			throws Exception {
 
-		Map paramMap = bindRequestToMap(request);
+		Map<String, Object> paramMap = bindRequestToMap(request);
 
 		int startRow = 1;
 		// 저장을 시작할 row값, 설정이 없을 경우 1부터 시작, 0은 Heder정보
@@ -222,11 +222,8 @@ public class ExcelController {
 		}
 
 		POIFSFileSystem fs = null;
-		try {
-			fs = new POIFSFileSystem(excelFile.getInputStream());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
+		fs = new POIFSFileSystem(excelFile.getInputStream());
 
 		HSSFWorkbook workbook = new HSSFWorkbook(fs);
 
@@ -284,7 +281,7 @@ public class ExcelController {
 			}
 		}
 
-		List<ListOrderedMap> insertList = new ArrayList();
+		List<ListOrderedMap> insertList = new ArrayList<ListOrderedMap>();
 		ListOrderedMap insertMap = null;
 
 		// 컬럼 값 추출
@@ -341,4 +338,5 @@ public class ExcelController {
 		}
 		return value;
 	}
+	
 }
